@@ -39,8 +39,8 @@ void loop() {
   FastLED.clear();
 
   leds[0] = CRGB(100, 33, 152);
-  leds[1] = CRGB(100, 35, 119);
-  leds[2] = CRGB(100, 38, 86);
+  leds[1] = CRGB(101, 39, 142);
+  leds[2] = CRGB(102, 45, 133);
   leds[3] = CRGB(103, 50, 124);
   leds[4] = CRGB(106, 62, 162);
   leds[5] = CRGB(108, 74, 199);
@@ -49,8 +49,8 @@ void loop() {
   leds[8] = CRGB(78, 132, 34);
   leds[9] = CRGB(87, 136, 49);
   leds[10] = CRGB(80, 200, 30);
-  leds[11] = CRGB(40, 200, 15);
-  leds[12] = CRGB(30, 190, 5);
+  leds[11] = CRGB(66, 198, 32);
+  leds[12] = CRGB(51, 196, 34);
   leds[13] = CRGB(36, 194, 36);
   leds[14] = CRGB(42, 198, 67);
   leds[15] = CRGB(49, 203, 99);
