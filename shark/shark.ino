@@ -71,7 +71,7 @@ void setup() {
 
 void loop() {
   FastLED.clear();
-  reset();
+  fade();
 
   // Pivot index
   int top = 2;
@@ -115,9 +115,6 @@ void loop() {
   colors[46] = CRGB(0, 0, 10);
   fillGradientBetween(46, 52);
 
-  // computeTwinkles();
-  // setTwinkles();
-
   for (int i = 0; i < NUM_LEDS; i++) {
     leds[i] = colors[i];
   }
@@ -157,7 +154,6 @@ void setupWave() {
 
   for (int i = 0; i < ROWS; i++) {
     for (int j = 0; j < COLS; j++) {
-      // x0, y0, r, angle
       Cell c = {colSize / 2 + i * colSize, rowSize / 2 + j * rowSize,
                 rowSize / 2, i * loc + j * loc};
       grid[i][j] = c;
@@ -175,20 +171,16 @@ void updateWave() {
         float dist = distance(x[k], y[k], xCell, yCell);
         if (dist < RADIUS * 2) {
           uint8_t b = mapf(dist, 0, RADIUS * 2, 255, MIN_BRIGHTNESS);
-          // brightness[k] = max(brightness[k], b);
           if (b > brightness[k]) {
             brightness[k] = b;
           }
-        }
-        if (k == 2 && i == 0 && j == 5) {
-          Serial.println(grid[i][j].angle);
         }
       }
     }
   }
 }
 
-void reset() {
+void fade() {
   for (uint8_t i = 0; i < NUM_LEDS; i++) {
     brightness[i] = max(MIN_BRIGHTNESS, brightness[i] / 2);
   }
