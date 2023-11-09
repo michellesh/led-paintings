@@ -1,3 +1,4 @@
+#include "mickymath.h"
 #include <FastLED.h>
 
 #define DATA_PIN 13
@@ -14,24 +15,49 @@ CRGB colors[NUM_LEDS];
 uint8_t brightness[NUM_LEDS];
 
 /* clang-format off */
-//uint8_t x[] = {73, 77, 79, 79, 77, 76, 76, 78, 59, 56,
-//               56, 58, 60, 62, 64, 65, 62, 57, 52, 47,
-//               41, 34, 29, 20, 26, 33, 39, 46, 55, 64,
-//               74, 69, 63, 55, 44, 32, 23, 15, 10,  8,
-//               9,  14, 21, 29, 19, 19, 24, 27, 32, 60};
-//
-//uint8_t y[] = { 41,  51,  62,  78, 85, 95, 106, 117, 153, 143,
-//               132, 121, 112, 102, 92, 81,  71,  62,  54,  90,
-//                84,  78,  71,  67, 60, 55,  49,  45,  39,  35,
-//                32,  23,  16,  11,  8,  9,  13,  18,  28,  38,
-//                49,  58,  52,  45, 42, 31,  24,  35,  39,  26};
+float x[] = {15.6, 18.6, 24.4, 34.1, 41.4, 46.2, 49.2, 56.9, 63.8, 69.0,
+             68.6, 58.7, 50.5, 50.6, 49.8, 46.7, 42.7, 40.0, 40.6, 33.2,
+             27.0, 24.2, 23.3, 24.1, 27.0, 31.6, 38.9, 30.2, 23.3, 18.2,
+             15.3, 14.4, 15.3, 16.7, 13.0, 19.4, 21.5, 20.6, 18.9, 16.4,
+             11.6,  3.4,  0.0,  4.5,  9.9, 14.8, 33.2, 34.7, 35.2, 34.4,
+             32.3, 29.6, 26.0};
+
+float y[] = { 15.8,   6.7,   0.0,   0.8,   7.2,  14.6,  22.3,  27.9,  34.2,  41.1,
+              49.9,  49.0,  32.1,  40.1,  48.2,  57.8,  66.3,  75.4,  84.3,  88.2,
+              96.2, 104.4, 113.2, 122.3, 130.4, 139.2, 150.2, 145.8, 137.3, 128.6,
+             118.3, 107.7,  96.8,  85.8,  77.0,  71.0,  61.4,  52.1,  44.4,  36.3,
+              53.5,  55.4,  47.2,  39.4,  32.6,  25.7,  25.5,  35.2,  45.1,  55.1,
+              63.2,  71.0,  79.7};
 /* clang-format on */
 
-// uint8_t xMin = 8;
-// uint8_t xMax = 79;
-//
-// uint8_t yMin = 8;
-// uint8_t yMax = 153;
+float xMax = 69.0;
+float yMax = 150.2;
+
+struct Cell {
+  float x0;
+  float y0;
+  float r;
+  float angle;
+  float x;
+  float y;
+
+  void update() {
+    x = pointXOnCircumference(r, x0, y0, angle);
+    y = pointYOnCircumference(r, x0, y0, angle);
+    angle += 8;
+    if (angle > 360) {
+      angle -= 360;
+    }
+  }
+};
+
+#define RADIUS 4
+#define ROWS 20
+#define COLS 10
+#define WIDTH COLS *RADIUS * 2
+#define HEIGHT ROWS *RADIUS * 2
+
+Cell grid[ROWS][COLS];
 
 void setup() {
   Serial.begin(115200);
@@ -39,10 +65,13 @@ void setup() {
 
   FastLED.addLeds<LED_TYPE, DATA_PIN>(leds, NUM_LEDS);
   FastLED.setBrightness(BRIGHTNESS);
+
+  setupWave();
 }
 
 void loop() {
   FastLED.clear();
+  reset();
 
   // Pivot index
   int top = 2;
@@ -101,6 +130,9 @@ void loop() {
   leds[top + 2] = blend(leds[top + 1], leds[top + 2], 5);
   leds[top - 2] = blend(leds[top - 1], leds[top - 2], 5);
 
+  updateWave();
+  setWaveBrightness();
+
   FastLED.show();
 }
 
@@ -118,15 +150,57 @@ void fillGradientBetween(int i, int j) {
   }
 }
 
-uint8_t attackDecayWave8(uint8_t i) {
-  if (i < 86) {
-    return i * 3;
-  } else {
-    i -= 86;
-    return 255 - (i + (i / 2));
+void setupWave() {
+  int rowSize = HEIGHT / ROWS;
+  int colSize = WIDTH / COLS;
+  int loc = 100;
+
+  for (int i = 0; i < ROWS; i++) {
+    for (int j = 0; j < COLS; j++) {
+      // x0, y0, r, angle
+      Cell c = {colSize / 2 + i * colSize, rowSize / 2 + j * rowSize,
+                rowSize / 2, i * loc + j * loc};
+      grid[i][j] = c;
+    }
   }
 }
 
+void updateWave() {
+  for (int i = 0; i < ROWS; i++) {
+    for (int j = 0; j < COLS; j++) {
+      grid[i][j].update();
+      for (int k = 0; k < NUM_LEDS; k++) {
+        float xCell = grid[i][j].x0 + grid[i][j].x;
+        float yCell = grid[i][j].y0 + grid[i][j].y;
+        float dist = distance(x[k], y[k], xCell, yCell);
+        if (dist < RADIUS * 2) {
+          uint8_t b = mapf(dist, 0, RADIUS * 2, 255, 0);
+          // brightness[k] = max(brightness[k], b);
+          if (b > brightness[k]) {
+            brightness[k] = b;
+          }
+        }
+        if (k == 2 && i == 0 && j == 5) {
+          Serial.println(grid[i][j].angle);
+        }
+      }
+    }
+  }
+}
+
+void reset() {
+  for (uint8_t i = 0; i < NUM_LEDS; i++) {
+    brightness[i] = 0;
+  }
+}
+
+void setWaveBrightness() {
+  for (uint8_t i = 0; i < NUM_LEDS; i++) {
+    leds[i].nscale8(brightness[i]);
+  }
+}
+
+/*
 uint8_t getBrightness(uint32_t ms, uint8_t salt) {
   uint16_t ticks = ms >> (8 - TWINKLE_SPEED);
   uint8_t fastcycle8 = ticks;
@@ -170,3 +244,4 @@ void setTwinkles() {
     leds[i] = colors[i].nscale8(max((uint8_t)MIN_BRIGHTNESS, brightness[i]));
   }
 }
+*/
