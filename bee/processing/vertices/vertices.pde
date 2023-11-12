@@ -7,6 +7,7 @@ void setup() {
 }
 
 void draw() {
+  String csvString = "";
   img.loadPixels();
   for (int x = 0; x < width; x += 4) {
     for (int y = 0; y < height; y += 4) {
@@ -16,7 +17,11 @@ void draw() {
         float radius = 2;
         fill(0);
         ellipse(x, y, radius, radius);
+        csvString += x + "," + y + "\n";
       }
     }
   }
+
+  String[] csvList = split(csvString, '\n');
+  saveStrings("vertices.csv", csvList);
 }
