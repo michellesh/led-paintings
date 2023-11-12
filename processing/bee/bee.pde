@@ -1,3 +1,4 @@
+/*
 PImage img;
 
 int mmWidth = 160;
@@ -44,8 +45,8 @@ void draw() {
   String[] csvList = split(csvString, '\n');
   saveStrings("bee-vertices.csv", csvList);
 }
+*/
 
-/*
 PImage img;
 
 void setup() {
@@ -56,16 +57,15 @@ void setup() {
 
 void draw() {
   img.loadPixels();
-  for (int x = 0; x < width; x+=8) {
-    for (int y = 0; y < height; y+=8) {
+  for (int x = 0; x < width; x+=4) {
+    for (int y = 0; y < height; y+=4) {
       int loc = x + y * width;
       float b = brightness(img.pixels[loc]);
       if (b < 100) {
-        float radius = 4;
+        float radius = 2;
         fill(0);
         ellipse(x, y, radius, radius);
       }
     }
   }
 }
-*/
