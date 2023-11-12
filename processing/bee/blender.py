@@ -11,17 +11,20 @@ def create_mesh_obj(verts, edges, faces, name="mesh"):
 
 
 # get xy values from csv file
-file = open('points.csv', 'r')
+x = []
+y = []
+file = open('/Users/michelle/dev/led-paintings/processing/bee/bee-vertices.csv', 'r')
 lines = file.readlines()
 for line in lines:
     coords = line.split(',')
-    x.append(coords[0].strip())
-    y.append(coords[1].strip())
+    if len(coords) == 2:
+        x.append(int(coords[0].strip()))
+        y.append(int(coords[1].strip()))
 
 #num_rings = 13
 verts = [(x[i], 0, y[i]) for i in range(len(x))]
 edges = []
 faces = []
 
-obj = create_mesh_obj(verts, edges, faces, name="ellipse")
-#obj.rotation_euler = (0, math.radians(90), 0)
+obj = create_mesh_obj(verts, edges, faces, name="bee-vertices")
+obj.rotation_euler = (math.radians(180), 0, 0)

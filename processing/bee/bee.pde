@@ -24,6 +24,7 @@ void setup() {
 }
 
 void draw() {
+  String csvString = "";
   int numDots = 0;
   img.loadPixels();
   for (int x = 0; x < width; x += imgStep) {
@@ -35,12 +36,13 @@ void draw() {
         fill(0);
         ellipse(x, y, radius, radius);
         numDots++;
-        print(x);
-        print(",");
-        println(y);
+        csvString += x + "," + y + "\n";
       }
     }
   }
+
+  String[] csvList = split(csvString, '\n');
+  saveStrings("bee-vertices.csv", csvList);
 }
 
 /*
