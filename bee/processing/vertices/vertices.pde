@@ -4,7 +4,7 @@ int[] bRange = {180, 240};
 
 void setup() {
   size(800, 508);
-  img = loadImage("/Users/michelle/dev/led-paintings/bee/bee-image-bw-blur.jpg");
+  img = loadImage("bee-image-bw-blur.jpg");
   colorMode(HSB, 255);
 }
 

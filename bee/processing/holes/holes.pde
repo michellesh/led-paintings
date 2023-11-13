@@ -18,7 +18,7 @@ int scale = imgStep / mmStep;
 void settings() { size(imgWidth, imgHeight); }
 
 void setup() {
-  img = loadImage("/Users/michelle/dev/led-paintings/bee/bee-image-bw.jpg");
+  img = loadImage("bee-image-bw.jpg");
   colorMode(HSB, 255);
   noLoop();
 }
