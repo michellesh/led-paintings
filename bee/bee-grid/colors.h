@@ -1,17 +1,7 @@
-CRGB rainbowColors[] = {
-    CRGB::Red,  CRGB::Orange, CRGB::Yellow, CRGB::Green, CRGB::Cyan,
-    CRGB::Blue, CRGB::Purple, CRGB::Pink,   CRGB::White,
-};
-
 DEFINE_GRADIENT_PALETTE(_firePalette){
     0,   139, 10,  0,  // dark red with hint of orange
     255, 255, 150, 0}; // gold with hint of orange
 CRGBPalette16 firePalette = _firePalette;
-
-DEFINE_GRADIENT_PALETTE(_oceanPalette){
-    0,   94, 255, 94,  // CHSV(HUE_GREEN, 100, 255)
-    255, 15, 150, 15}; // greenish teal
-CRGBPalette16 oceanPalette = _oceanPalette;
 
 DEFINE_GRADIENT_PALETTE(_floralPalette){0,   255, 127, 80,   // CRGB::Coral
                                         255, 230, 230, 250}; // CRGB::Lavender
@@ -28,7 +18,6 @@ CRGBPalette16 fairyPalette = _fairyPalette;
 // clang-format off
 CRGBPalette16* activePalettes[] = {
   &floralPalette,
-  &oceanPalette,
   &firePalette,
   &icePalette,
   &fairyPalette

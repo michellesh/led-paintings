@@ -14,7 +14,7 @@ uint8_t getTwinkleBrightness(uint32_t ms, uint8_t salt) {
              : 0;
 }
 
-void twinkle() {
+void setTwinkles() {
   uint16_t PRNG16 = 11337;
   uint32_t clock32 = millis();
 
@@ -35,9 +35,7 @@ void twinkle() {
     // We now have the adjusted 'clock' for this pixel, now we call
     // the function that computes what color the pixel should be based
     // on the "brightness = f( time )" idea.
-    uint8_t brightness = getTwinkleBrightness(myclock30, myunique8);
-    CRGB color = palette.getColor(i).nscale8(brightness);
-    leds[i] = color.nscale8(brightness);
+    brightness[i] = getTwinkleBrightness(myclock30, myunique8);
   }
 }
 
