@@ -11,6 +11,11 @@ Palette palette;
 
 CRGB leds[NUM_LEDS];
 uint8_t brightness[NUM_LEDS];
+uint8_t x[] = {0, 0, 0, 0, 0, 0,
+                  5, 15, 25, 35, 45, 55, 65, 75, 85, 95,
+                  100, 100, 100, 100, 100, 100,
+                  90, 80, 70, 60, 50, 40, 30, 20, 10};
+uint8_t xMax = 100;
 
 void setup() {
   Serial.begin(115200);
@@ -27,7 +32,7 @@ void loop() {
   setTwinkles();
 
   for (int i = 0; i < NUM_LEDS; i++) {
-    CRGB color = palette.mapToColor(i, 0, NUM_LEDS);
+    CRGB color = palette.mapToColor(x[i], 0, xMax);
     leds[i] = color.nscale8(brightness[i]);
   }
 
