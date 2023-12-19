@@ -33,7 +33,8 @@ void loop() {
 
   for (int i = 0; i < NUM_LEDS; i++) {
     CRGB color = palette.mapToColor(x[i], 0, xMax);
-    leds[i] = color.nscale8(brightness[i]);
+    //leds[i] = color.nscale8(brightness[i]);
+    leds[i] = color.nscale8(255);
   }
 
   FastLED.setBrightness(BRIGHTNESS_MAX);
